@@ -6,6 +6,7 @@ import 'main_page/top/banner_menu.dart';
 import 'main_page/top/menu_category.dart';
 import 'footer/play_footer.dart';
 import 'footer/bottom_navigation_menu.dart';
+import 'footer/bottom_navigation_menu_controller.dart';
 import 'main_page/body/audio_list_view.dart';
 import 'main_page/body/sleep_timer_widget.dart';
 
@@ -49,6 +50,15 @@ class _SimpleAudioScreenState extends ConsumerState<SimpleAudioScreen> {
     {'name': 'Tập trung', 'count': 1, 'icon': Icons.psychology},
     {'name': 'Ru ngủ', 'count': 2, 'icon': Icons.nightlight_round},
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    // Đảm bảo khi mới vào app luôn ở màn chính (Tab 0: Trang chủ)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(currentBottomTabProvider.notifier).state = 0;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

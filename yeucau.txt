@@ -1,0 +1,47 @@
+2. Đánh giá dưới góc nhìn người dùng cuối
+
+Vấn đề về trải nghiệm
+
+Nội dung chính bị đẩy xuống thấp. Người mở app buổi tối muốn nghe ngay. Hiện phải lướt qua banner và 4 thẻ số liệu mới thấy danh sách âm thanh. Nên đưa danh sách lên cao hoặc có nút “Phát gần nhất / Tiếp tục nghe”.
+Thẻ thống kê gây nghi ngờ. “320k+ lượt nghe”, “4.9/5.0”, “100% thư giãn tuyệt đối” trông như số tự tạo. Người dùng và reviewer của store dễ coi là claim không có căn cứ. Với “100% thư giãn tuyệt đối”, đây còn là claim sức khỏe, có thể gặp rắc rối khi review.
+Banner “Gói Thư Giãn Đỉnh Cao” mơ hồ. Không có nút CTA rõ ràng. Icon lá ở góc phải nhìn như nút nhưng không rõ chức năng.
+Chip lọc bị cắt ở mép phải. Việc này ổn vì gợi ý có thể vuốt ngang, nhưng nên cho thấy rõ chip bị cắt một phần (đang làm đúng) và đảm bảo có hiệu ứng cuộn mượt.
+Item bị trùng thông tin. “Mưa trên mái tôn” xuất hiện cả trong danh sách lẫn mini player, trạng thái đang phát chưa được thể hiện ngay trên item (nên có equalizer hoặc đổi icon thành pause).
+Nhãn FREE đè lên thumbnail và bị mini player che, dễ bị đọc nhầm.
+Không có hẹn giờ tắt (sleep timer) nổi bật. Đây là tính năng cốt lõi của app ngủ. Mình thấy “60m vòng” nhỏ ở item bên dưới, nhưng nên có truy cập nhanh.
+3. Đóng góp để đạt chuẩn App Store / Google Play
+A. Sửa giao diện (ưu tiên cao)
+Chừa khoảng đệm dưới danh sách bằng chiều cao mini player + bottom nav (với Flutter: padding dưới của ListView; với React Native: contentContainerStyle). Hiện nội dung bị che là lỗi dễ bị reviewer chê.
+Tôn trọng Safe Area (notch, thanh home indicator của iPhone). Ảnh của bạn chụp từ emulator, hãy kiểm tra trên máy thật có notch.
+Vùng chạm tối thiểu 44x44pt (iOS) / 48x48dp (Android). Kiểm tra nút “...”, nút trái tim, các chip.
+Độ tương phản chữ đạt WCAG AA (tỉ lệ 4.5:1 cho chữ thường). Chữ xám phụ trên nền tối như “Âm thanh tự nhiên”, “Tiếng mưa gõ nhịp nhàng” nên sáng hơn một chút.
+Cỡ chữ tối thiểu khoảng 12sp, và hỗ trợ tăng cỡ chữ theo cài đặt hệ thống (Dynamic Type / font scale) mà không vỡ layout.
+Bottom nav: nhãn “TRANG CHỦ” viết hoa toàn bộ hơi to so với icon, nên dùng chữ thường/in hoa chữ đầu và cỡ nhỏ hơn cho cân đối.
+Banner nên có CTA rõ ràng (ví dụ “Khám phá” hoặc “Nâng cấp”) thay vì icon lá mơ hồ.
+B. Cải thiện trải nghiệm
+Thêm trạng thái đang phát trên item (equalizer động, viền nổi bật).
+Thêm skeleton loading thay vì màn trống, và empty state / error state khi mất mạng.
+Nút sleep timer nhanh ngay trên mini player.
+Mini player vuốt lên mở full-screen player (có thanh tiến trình, âm lượng, hẹn giờ).
+Thêm haptic feedback nhẹ khi chọn chip, bật/tắt phát.
+Cho phép trộn nhiều âm thanh (mưa + sấm + lửa) nếu app có ý định cạnh tranh với các app như Calm hay Rain Rain.
+C. Yêu cầu bắt buộc của store (ngoài giao diện)
+
+Phần này không nhìn thấy trong ảnh, nhưng rất hay bị từ chối:
+
+Phát nền (background audio): iOS cần bật Audio, AirPlay, and Picture in Picture trong Background Modes; Android cần foreground service kèm thông báo media (có điều khiển play/pause trên màn hình khóa).
+Gói “PRO CLUB”/thanh toán: dùng In-App Purchase (Apple) và Google Play Billing, không dùng thanh toán ngoài cho nội dung số. Phải có nút Khôi phục giao dịch (Restore Purchases), mô tả giá, chu kỳ gia hạn, và điều khoản rõ ràng. Apple rất hay từ chối vì thiếu mục này.
+Chính sách quyền riêng tư (Privacy Policy) có URL công khai, cùng khai báo dữ liệu (App Privacy label của Apple, Data Safety của Google).
+Bỏ hoặc có căn cứ cho các số liệu và claim như “100% thư giãn”, “320k+ lượt nghe”, “4.9/5.0”. Không dùng từ ngữ mang tính y tế như “chữa mất ngủ” nếu không có bằng chứng.
+Bản quyền âm thanh và hình ảnh: chuẩn bị giấy phép hoặc nguồn gốc cho 64+ âm thanh và ảnh pixel-art. Đây là lý do bị gỡ app khá phổ biến.
+Tên app và icon: kiểm tra “Nocturn Sleep” không trùng nhãn hiệu với app có sẵn.
+Hỗ trợ đa ngôn ngữ: bạn đang dùng tiếng Việt, nên chuẩn bị thêm tiếng Anh vì phần lớn thị trường và reviewer dùng tiếng Anh. Tên app nhất quán, ví dụ tên danh mục cả hai ngôn ngữ.
+Ảnh chụp màn hình và mô tả store đúng kích thước yêu cầu, không dùng ảnh của emulator có thanh debug.
+Kiểm thử: chạy trên thiết bị thật, nhiều kích cỡ màn hình, chế độ ngang (hoặc khóa dọc rõ ràng), và kiểm tra khi có cuộc gọi đến, rút tai nghe, mất mạng.
+4. Thứ tự mình đề xuất làm
+Sửa mini player che nội dung (padding dưới) và safe area.
+Gỡ hoặc đổi các số liệu, claim chưa có căn cứ.
+Hoàn thiện nút CTA ở banner và trạng thái đang phát.
+Làm background audio, sleep timer, thông báo media.
+Tích hợp thanh toán đúng chuẩn kèm Restore Purchases, Privacy Policy.
+Kiểm thử trên máy thật rồi chuẩn bị tài liệu store.

@@ -10,11 +10,11 @@ class BottomNavigationMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentIndex = ref.watch(currentBottomTabProvider);
 
-    // Dùng isChoose cho từng tab cụ thể
-    final bool isChooseHome = ref.watch(isChooseTabProvider(0));
-    final bool isChooseLibrary = ref.watch(isChooseTabProvider(1));
-    final bool isChooseStats = ref.watch(isChooseTabProvider(2));
-    final bool isChoosePro = ref.watch(isChooseTabProvider(3));
+    // Xác định tab đang chọn trực tiếp từ currentIndex
+    final bool isChooseHome = currentIndex == 0;
+    final bool isChooseLibrary = currentIndex == 1;
+    final bool isChooseStats = currentIndex == 2;
+    final bool isChoosePro = currentIndex == 3;
 
     return Container(
       decoration: BoxDecoration(
