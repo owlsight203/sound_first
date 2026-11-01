@@ -2,8 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'library/library_page.dart';
-import 'main_page/body/audio_provider.dart';
-import 'footer/bottomNavigationMenu_controller.dart';
+import 'footer/bottom_navigation_menu_controller.dart';
 
 
 void handleTabNavigation(BuildContext context, WidgetRef ref, int targetIndex) {

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../main_page/top/menuCategory.dart';
-import '../main_page/body/audioListView.dart';
+import '../main_page/top/menu_category.dart';
+import '../main_page/body/audio_list_view.dart';
 import '../main_page/body/audio_provider.dart';
 import '../main_page/body/audio_model.dart';
-import '../footer/playFooter.dart';
-import '../footer/bottomNavigationMenu.dart';
-import '../footer/bottomNavigationMenu_controller.dart';
+import '../footer/play_footer.dart';
+import '../footer/bottom_navigation_menu.dart';
 
 class LibraryPage extends ConsumerStatefulWidget {
   const LibraryPage({super.key});
@@ -16,9 +15,6 @@ class LibraryPage extends ConsumerStatefulWidget {
 }
 
 class _LibraryPageState extends ConsumerState<LibraryPage> {
-  // Tab hiện tại ở menu dưới (Tab Chủ Đề/Thư viện đang chọn là 1)
-  int _currentIndex = 1;
-
   // Trạng thái danh mục được chọn trong trang Thư viện
   String _selectedCategory = 'Tất cả';
   final List<Map<String, dynamic>> _categories = [
@@ -154,7 +150,7 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
       ),
 
       // Thanh BottomNavigationBar đồng bộ giao diện
-      bottomNavigationBar: BottomNavigationMenu(),
+      bottomNavigationBar: const BottomNavigationMenu(),
     );
   }
 }

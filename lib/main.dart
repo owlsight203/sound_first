@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Các thành phần giao diện khác
-import '../main_page/top/bannerMenu.dart';
-import '../main_page/top/menuCategory.dart';
-import 'footer/playFooter.dart';
-import 'footer/bottomNavigationMenu.dart';
-import '../main_page/body/audioListView.dart';
-import '../main_page/body/sleepTimerWidget.dart';
-import 'library/library_page.dart';
+import 'main_page/top/banner_menu.dart';
+import 'main_page/top/menu_category.dart';
+import 'main_page/top/stat_card.dart';
+import 'footer/play_footer.dart';
+import 'footer/bottom_navigation_menu.dart';
+import 'main_page/body/audio_list_view.dart';
+import 'main_page/body/sleep_timer_widget.dart';
 
-// 🌟 Đảm bảo chỉ import chính xác file controller này ở dưới cùng phần import:
-import 'main_page/body/audio_controller.dart';
-import 'main_page/body/audio_provider.dart'; // Import file controller vừa tách
-import 'main_page/body/audio_model.dart';      // 👈 Thêm dòng này để nhận diện AudioModel
-import 'footer/bottomNavigationMenu_controller.dart';
+import 'main_page/body/audio_provider.dart';
+import 'main_page/body/audio_model.dart';
 import 'navigation_helper.dart';
 
 void main() {
@@ -46,7 +42,6 @@ class SimpleAudioScreen extends ConsumerStatefulWidget {
 }
 
 class _SimpleAudioScreenState extends ConsumerState<SimpleAudioScreen> {
-  int _currentIndex = 1;
   String _selectedCategory = 'Tất cả';
   final List<Map<String, dynamic>> _categories = [
     {'name': 'Tất cả', 'count': 8, 'icon': null},
@@ -116,21 +111,45 @@ class _SimpleAudioScreenState extends ConsumerState<SimpleAudioScreen> {
                   onTap: () {},
                 ),
                 const SizedBox(height: 16),
-                Column(
+                const Column(
                   children: [
                     Row(
                       children: [
-                        Expanded(child: _buildStatCard(Icons.library_music_rounded, "64+", "Âm thanh tự nhiên")),
-                        const SizedBox(width: 10),
-                        Expanded(child: _buildStatCard(Icons.headphones_rounded, "320k+", "Lượt nghe mỗi ngày")),
+                        Expanded(
+                          child: StatCard(
+                            icon: Icons.library_music_rounded,
+                            value: "64+",
+                            label: "Âm thanh tự nhiên",
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: StatCard(
+                            icon: Icons.headphones_rounded,
+                            value: "320k+",
+                            label: "Lượt nghe mỗi ngày",
+                          ),
+                        ),
                       ],
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10),
                     Row(
                       children: [
-                        Expanded(child: _buildStatCard(Icons.star_rounded, "4.9 / 5.0", "Đánh giá chất lượng")),
-                        const SizedBox(width: 10),
-                        Expanded(child: _buildStatCard(Icons.verified_rounded, "100%", "Thư giãn tuyệt đối")),
+                        Expanded(
+                          child: StatCard(
+                            icon: Icons.star_rounded,
+                            value: "4.9 / 5.0",
+                            label: "Đánh giá chất lượng",
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: StatCard(
+                            icon: Icons.verified_rounded,
+                            value: "100%",
+                            label: "Thư giãn tuyệt đối",
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -235,44 +254,7 @@ class _SimpleAudioScreenState extends ConsumerState<SimpleAudioScreen> {
             ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationMenu(),
-
-    );
-  }
-
-  Widget _buildStatCard(IconData icon, String value, String label) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1E1E2C),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: const Color(0xFF00C853), size: 18),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 13,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: TextStyle(
-              color: Colors.grey.shade400,
-              fontSize: 10,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
+      bottomNavigationBar: const BottomNavigationMenu(),
     );
   }
 }
