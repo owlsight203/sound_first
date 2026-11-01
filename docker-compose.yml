@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  flutter-dev:
+    build: .
+    container_name: sound_first_dev
+    volumes:
+      - .:/app
+    ports:
+      - "8080:8080"  # Thêm dòng này để mở thông cổng 8080 ra ngoài VPS
+    working_dir: /app
+    tty: true
+    stdin_open: true

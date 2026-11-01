@@ -7,7 +7,7 @@ import '../main_page/top/bannerMenu.dart';
 import '../main_page/top/menuCategory.dart';
 import 'footer/playFooter.dart';
 import 'footer/bottomNavigationMenu.dart';
-import '../main_page/body/AudioListView.dart';
+import '../main_page/body/audioListView.dart';
 import '../main_page/body/sleepTimerWidget.dart';
 import 'library/library_page.dart';
 
