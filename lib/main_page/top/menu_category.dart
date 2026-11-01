@@ -15,9 +15,10 @@ class MenuCategory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 40,
+      height: 42,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
         itemCount: categories.length,
         separatorBuilder: (context, index) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
@@ -32,7 +33,7 @@ class MenuCategory extends StatelessWidget {
                   Icon(
                     cat['icon'],
                     size: 16,
-                    color: isSelected ? Colors.white : Colors.grey.shade300,
+                    color: isSelected ? Colors.white : Colors.grey.shade200,
                   ),
                   const SizedBox(width: 6),
                 ],
@@ -44,8 +45,8 @@ class MenuCategory extends StatelessWidget {
                         const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? Colors.black.withOpacity(0.2)
-                          : Colors.white.withOpacity(0.1),
+                          ? Colors.black.withValues(alpha: 0.25)
+                          : Colors.white.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
@@ -61,7 +62,7 @@ class MenuCategory extends StatelessWidget {
                 const Color(0xFF00C853), // Màu xanh lá nổi bật khi chọn
             backgroundColor: const Color(0xFF1E1E2C),
             labelStyle: TextStyle(
-              color: isSelected ? Colors.white : Colors.grey.shade300,
+              color: isSelected ? Colors.white : Colors.grey.shade200,
               fontWeight: FontWeight.w500,
               fontSize: 13,
             ),
@@ -70,7 +71,7 @@ class MenuCategory extends StatelessWidget {
               side: BorderSide(
                 color: isSelected
                     ? Colors.transparent
-                    : Colors.white.withOpacity(0.05),
+                    : Colors.white.withValues(alpha: 0.08),
               ),
             ),
             onSelected: (bool selected) {

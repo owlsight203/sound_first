@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // Các thành phần giao diện khác
 import 'main_page/top/banner_menu.dart';
 import 'main_page/top/menu_category.dart';
-import 'main_page/top/stat_card.dart';
 import 'footer/play_footer.dart';
 import 'footer/bottom_navigation_menu.dart';
 import 'main_page/body/audio_list_view.dart';
@@ -78,113 +77,95 @@ class _SimpleAudioScreenState extends ConsumerState<SimpleAudioScreen> {
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(16, 20, 16, 130),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Khám Phá Không Gian',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Chọn âm thanh yêu thích để bắt đầu thư giãn',
-                  style: TextStyle(
-                    color: Colors.grey.shade400,
-                    fontSize: 13,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                PromoBanner(
-                  badgeText: 'ĐẶC BIỆT HÔM NAY',
-                  title: 'Gói Thư Giãn Đỉnh Cao',
-                  description:
-                      'Trải nghiệm không gian âm thanh tự nhiên chất lượng cao giúp dễ ngủ và tập trung tuyệt đối.',
-                  icon: Icons.spa_rounded,
-                  onTap: () {},
-                ),
-                const SizedBox(height: 16),
-                const Column(
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: StatCard(
-                            icon: Icons.library_music_rounded,
-                            value: "64+",
-                            label: "Âm thanh tự nhiên",
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: StatCard(
-                            icon: Icons.headphones_rounded,
-                            value: "320k+",
-                            label: "Lượt nghe mỗi ngày",
-                          ),
-                        ),
-                      ],
+      body: SafeArea(
+        bottom: false,
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 165),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Khám Phá Không Gian',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
                     ),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: StatCard(
-                            icon: Icons.star_rounded,
-                            value: "4.9 / 5.0",
-                            label: "Đánh giá chất lượng",
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: StatCard(
-                            icon: Icons.verified_rounded,
-                            value: "100%",
-                            label: "Thư giãn tuyệt đối",
-                          ),
-                        ),
-                      ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Chọn âm thanh yêu thích để bắt đầu thư giãn',
+                    style: TextStyle(
+                      color: Colors.grey.shade400,
+                      fontSize: 13,
                     ),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                MenuCategory(
-                  categories: _categories,
-                  selectedCategory: _selectedCategory,
-                  onCategorySelected: (categoryName) {
-                    setState(() {
-                      _selectedCategory = categoryName;
-                    });
-                  },
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Gợi Ý Nổi Bật',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                  ),
+                  const SizedBox(height: 16),
+                  PromoBanner(
+                    badgeText: 'ĐẶC BIỆT HÔM NAY',
+                    title: 'Gói Thư Giãn Đỉnh Cao',
+                    description:
+                        'Trải nghiệm không gian âm thanh tự nhiên chất lượng cao giúp dễ ngủ và tập trung.',
+                    icon: Icons.spa_rounded,
+                    onTap: () {
+                      handleTabNavigation(context, ref, 1);
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  MenuCategory(
+                    categories: _categories,
+                    selectedCategory: _selectedCategory,
+                    onCategorySelected: (categoryName) {
+                      setState(() {
+                        _selectedCategory = categoryName;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Gợi Ý Nổi Bật',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        handleTabNavigation(context, ref, 1);
-                      },
-                      child: const Text("..."),
-  
-                    ),
-                  ],
-                ),
+                      TextButton(
+                        onPressed: () {
+                          handleTabNavigation(context, ref, 1);
+                        },
+                        style: TextButton.styleFrom(
+                          minimumSize: const Size(48, 44),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 8),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Xem tất cả',
+                              style: TextStyle(
+                                color: Color(0xFF00C853),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            SizedBox(width: 4),
+                            Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              size: 11,
+                              color: Color(0xFF00C853),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 const SizedBox(height: 8),
                 AudioListView(
                   selectedCategory: _selectedCategory,
@@ -254,7 +235,8 @@ class _SimpleAudioScreenState extends ConsumerState<SimpleAudioScreen> {
             ),
         ],
       ),
-      bottomNavigationBar: const BottomNavigationMenu(),
+    ),
+    bottomNavigationBar: const BottomNavigationMenu(),
     );
   }
 }

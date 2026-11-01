@@ -16,6 +16,10 @@ class AudioListView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final currentPlayingAudio = ref.watch(currentPlayingAudioProvider);
+    final isPlaying = ref.watch(isPlayingProvider);
+    final audioController = ref.read(audioControllerProvider);
+
     // 1. Lọc danh sách theo danh mục đang được chọn từ thanh MenuCategory
     final allAudios = ref.watch(audioListProvider);
 
@@ -50,17 +54,32 @@ class AudioListView extends ConsumerWidget {
       separatorBuilder: (context, index) => const SizedBox(height: 12),
       itemBuilder: (context, index) {
         final audio = filteredAudios[index];
+        final bool isThisSelected = currentPlayingAudio?.path == audio.path;
+        final bool isThisPlaying = isThisSelected && isPlaying;
+
         return _buildAudioCard(
             title: audio.title,
             subtitle: audio.subtitle,
             duration: audio.duration,
             tag: audio.tag,
             imagePath: audio.image,
+            isSelected: isThisSelected,
+            isPlaying: isThisPlaying,
             onTap: () {
-              ref.read(currentPlayingAudioProvider.notifier).state = audio;
-              if (onPlayAudio != null) {
-                onPlayAudio!(
-                    audio.path, audio.title, audio.subtitle, audio.image);
+              if (isThisSelected) {
+                if (isPlaying) {
+                  audioController.pauseAudio();
+                } else {
+                  audioController.continueAudio();
+                }
+              } else {
+                ref.read(currentPlayingAudioProvider.notifier).state = audio;
+                if (onPlayAudio != null) {
+                  onPlayAudio!(
+                      audio.path, audio.title, audio.subtitle, audio.image);
+                } else {
+                  audioController.playAudio(audio);
+                }
               }
             });
       },
@@ -73,6 +92,8 @@ class AudioListView extends ConsumerWidget {
     required String duration,
     required String tag,
     required String imagePath,
+    required bool isSelected,
+    required bool isPlaying,
     required VoidCallback onTap,
   }) {
     return InkWell(
@@ -83,6 +104,23 @@ class AudioListView extends ConsumerWidget {
         decoration: BoxDecoration(
           color: const Color(0xFF1E1E2C),
           borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isPlaying
+                ? const Color(0xFF00C853)
+                : (isSelected
+                    ? const Color(0xFF00C853).withValues(alpha: 0.5)
+                    : Colors.transparent),
+            width: 1.5,
+          ),
+          boxShadow: isPlaying
+              ? [
+                  BoxShadow(
+                    color: const Color(0xFF00C853).withValues(alpha: 0.15),
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
         ),
         child: Row(
           children: [
@@ -106,7 +144,7 @@ class AudioListView extends ConsumerWidget {
                       },
                     ),
                     Positioned(
-                      bottom: 4,
+                      top: 4,
                       left: 4,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
@@ -134,13 +172,31 @@ class AudioListView extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                            color: isPlaying
+                                ? const Color(0xFF00C853)
+                                : Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      if (isPlaying) ...[
+                        const SizedBox(width: 6),
+                        const Icon(
+                          Icons.graphic_eq_rounded,
+                          color: Color(0xFF00C853),
+                          size: 18,
+                        ),
+                      ],
+                    ],
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -174,10 +230,16 @@ class AudioListView extends ConsumerWidget {
             ),
             const SizedBox(width: 12),
             Material(
-              color: const Color(0xFF2B2B3D),
+              color: isPlaying
+                  ? const Color(0xFF00C853)
+                  : const Color(0xFF2B2B3D),
               shape: const CircleBorder(),
               child: IconButton(
-                icon: const Icon(Icons.play_arrow, color: Colors.white),
+                icon: Icon(
+                  isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                  color: isPlaying ? Colors.black : Colors.white,
+                  size: 24,
+                ),
                 onPressed: onTap,
               ),
             ),

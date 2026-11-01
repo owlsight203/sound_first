@@ -59,94 +59,92 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(16, 20, 16, 130), // Chừa khoảng trống cho Footer phía dưới
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Tất Cả Bản Phối',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+      body: SafeArea(
+        bottom: false,
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 165), // Chừa đủ khoảng trống cho Mini Player + Bottom Bar
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Tất Cả Bản Phối',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Khám phá toàn bộ danh sách âm thanh thư giãn của bạn',
-                  style: TextStyle(
-                    color: Colors.grey.shade400,
-                    fontSize: 13,
+                  const SizedBox(height: 4),
+                  Text(
+                    'Khám phá toàn bộ danh sách âm thanh thư giãn của bạn',
+                    style: TextStyle(
+                      color: Colors.grey.shade400,
+                      fontSize: 13,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
-                // Thanh danh mục thể loại cho phép lọc trong Thư viện
-                MenuCategory(
-                  categories: _categories,
-                  selectedCategory: _selectedCategory,
-                  onCategorySelected: (categoryName) {
-                    setState(() {
-                      _selectedCategory = categoryName;
-                    });
-                  },
-                ),
-                const SizedBox(height: 20),
+                  // Thanh danh mục thể loại cho phép lọc trong Thư viện
+                  MenuCategory(
+                    categories: _categories,
+                    selectedCategory: _selectedCategory,
+                    onCategorySelected: (categoryName) {
+                      setState(() {
+                        _selectedCategory = categoryName;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 20),
 
-                // Hiển thị toàn bộ danh sách âm thanh không giới hạn
-                // Hiển thị toàn bộ danh sách âm thanh không giới hạn
-                AudioListView(
-                  selectedCategory: _selectedCategory,
-                  limit: null,
-                  onPlayAudio: (path, title, subtitle, imagePath) {
-                    // 🌟 Lấy danh sách từ provider để tìm đúng AudioModel và kích hoạt controller phát nhạc
-                    final allAudios = ref.read(audioListProvider);
-                    final selectedAudio = allAudios.firstWhere(
-                      (audio) => audio.path == path,
-                      orElse: () => AudioModel(
-                        title: title,
-                        subtitle: subtitle,
-                        duration: '60m vòng',
-                        tag: '',
-                        category: _selectedCategory,
-                        path: path,
-                        image: imagePath,
-                      ),
-                    );
-                    
-                    // Gọi AudioController để phát nhạc thực tế
-                    ref.read(audioControllerProvider).playAudio(selectedAudio);
-                  },
-                ),
-              ],
-            ),
-          ),
-
-          // 👉 HIỂN THỊ PLAY FOOTER TỰ ĐỘNG THÔNG QUA RIVERPOD & AUDIOCONTROLLER
-          if (currentAudio != null)
-            Positioned(
-              left: 16,
-              right: 16,
-              bottom: 30,
-              child: PlayFooter(
-                title: currentAudio.title,
-                subtitle: currentAudio.subtitle,
-                imagePath: currentAudio.image,
-                isPlaying: isPlaying,
-                onPlayPauseToggle: () {
-                  // Xử lý Play/Pause thực tế bằng AudioController
-                  if (isPlaying) {
-                    audioController.pauseAudio();
-                  } else {
-                    audioController.continueAudio();
-                  }
-                },
+                  // Hiển thị toàn bộ danh sách âm thanh không giới hạn
+                  AudioListView(
+                    selectedCategory: _selectedCategory,
+                    limit: null,
+                    onPlayAudio: (path, title, subtitle, imagePath) {
+                      final allAudios = ref.read(audioListProvider);
+                      final selectedAudio = allAudios.firstWhere(
+                        (audio) => audio.path == path,
+                        orElse: () => AudioModel(
+                          title: title,
+                          subtitle: subtitle,
+                          duration: '60m vòng',
+                          tag: '',
+                          category: _selectedCategory,
+                          path: path,
+                          image: imagePath,
+                        ),
+                      );
+                      
+                      ref.read(audioControllerProvider).playAudio(selectedAudio);
+                    },
+                  ),
+                ],
               ),
             ),
-        ],
+
+            if (currentAudio != null)
+              Positioned(
+                left: 16,
+                right: 16,
+                bottom: 30,
+                child: PlayFooter(
+                  title: currentAudio.title,
+                  subtitle: currentAudio.subtitle,
+                  imagePath: currentAudio.image,
+                  isPlaying: isPlaying,
+                  onPlayPauseToggle: () {
+                    if (isPlaying) {
+                      audioController.pauseAudio();
+                    } else {
+                      audioController.continueAudio();
+                    }
+                  },
+                ),
+              ),
+          ],
+        ),
       ),
 
       // Thanh BottomNavigationBar đồng bộ giao diện

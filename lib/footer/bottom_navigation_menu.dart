@@ -21,55 +21,57 @@ class BottomNavigationMenu extends ConsumerWidget {
         color: const Color(0xFF1E1E2C),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 10,
             offset: const Offset(0, -4),
           ),
         ],
       ),
-      child: BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: (index) {
-          handleTabNavigation(context, ref, index);
-        },
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        // Bạn vẫn có thể giữ màu chung hoặc tuỳ biến chi tiết từng item bên dưới
-        selectedItemColor: const Color(0xFF00C853),
-        unselectedItemColor: Colors.grey.shade500,
-        selectedFontSize: 12,
-        unselectedFontSize: 12,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.tune_rounded,
-              color: isChooseHome ? const Color(0xFF00C853) : Colors.grey.shade500,
+      child: SafeArea(
+        top: false,
+        child: BottomNavigationBar(
+          currentIndex: currentIndex,
+          onTap: (index) {
+            handleTabNavigation(context, ref, index);
+          },
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          selectedItemColor: const Color(0xFF00C853),
+          unselectedItemColor: Colors.grey.shade500,
+          selectedFontSize: 11,
+          unselectedFontSize: 11,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.tune_rounded,
+                color: isChooseHome ? const Color(0xFF00C853) : Colors.grey.shade500,
+              ),
+              label: 'Trang chủ',
             ),
-            label: 'TRANG CHỦ',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.nightlight_round,
-              color: isChooseLibrary ? const Color(0xFF00C853) : Colors.grey.shade500,
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.nightlight_round,
+                color: isChooseLibrary ? const Color(0xFF00C853) : Colors.grey.shade500,
+              ),
+              label: 'Chủ đề',
             ),
-            label: 'CHỦ ĐỀ',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.hourglass_bottom_rounded,
-              color: isChooseStats ? const Color(0xFF00C853) : Colors.grey.shade500,
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.hourglass_bottom_rounded,
+                color: isChooseStats ? const Color(0xFF00C853) : Colors.grey.shade500,
+              ),
+              label: 'Thống kê',
             ),
-            label: 'THỐNG KÊ',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.workspace_premium_rounded,
-              color: isChoosePro ? const Color(0xFF00C853) : Colors.grey.shade500,
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.workspace_premium_rounded,
+                color: isChoosePro ? const Color(0xFF00C853) : Colors.grey.shade500,
+              ),
+              label: 'Pro Club',
             ),
-            label: 'PRO CLUB',
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
