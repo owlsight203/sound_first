@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'library/library_page.dart';
 import 'pro/pro_screen.dart';
+import 'stats/stats_screen.dart';
 import 'footer/bottom_navigation_menu_controller.dart';
 
 void handleTabNavigation(BuildContext context, WidgetRef ref, int targetIndex) {
@@ -56,15 +57,21 @@ void handleTabNavigation(BuildContext context, WidgetRef ref, int targetIndex) {
       });
     }
   } else if (targetIndex == 2) {
-    // Dành cho tab tương lai (Thống Kê = 2)
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Tính năng đang phát triển, sẽ ra mắt sớm!'),
-        duration: Duration(seconds: 1),
-      ),
-    );
-    
-    // Trả lại màu cho tab cũ vì chưa có màn hình mới
-    ref.read(currentBottomTabProvider.notifier).state = currentIndex;
+    // Sang Thống Kê (StatsScreen)
+    if (currentIndex == 0) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const StatsScreen()),
+      ).then((_) {
+        ref.read(currentBottomTabProvider.notifier).state = 0;
+      });
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const StatsScreen()),
+      ).then((_) {
+        ref.read(currentBottomTabProvider.notifier).state = 0;
+      });
+    }
   }
 }
