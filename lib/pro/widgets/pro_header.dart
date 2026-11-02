@@ -14,16 +14,6 @@ class ProHeader extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        if (onClose != null)
-          Positioned(
-            left: 0,
-            top: 0,
-            child: IconButton(
-              icon: const Icon(Icons.close_rounded, color: Colors.white70),
-              onPressed: onClose,
-              tooltip: 'Đóng',
-            ),
-          ),
         Column(
           children: [
             Container(

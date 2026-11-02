@@ -98,16 +98,8 @@ class _ProScreenState extends ConsumerState<ProScreen> {
               ),
               const SizedBox(height: 28),
 
-              // 9. DUOLINGO SUPER QUALITY PERKS SECTION
-              const ProPerksSection(),
-              const SizedBox(height: 24),
-
-              // 10. SECURITY & GUARANTEE INFO
-              const ProSecurityFooter(),
-              const SizedBox(height: 24),
 
               // 11. MINI PLAYER BAR AT THE BOTTOM
-              const ProMiniPlayer(),
             ],
           ),
         ),
