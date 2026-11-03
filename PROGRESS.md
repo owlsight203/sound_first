@@ -1,6 +1,6 @@
 # 📋 PROGRESS.md — Nocturn Sleep (sound_first)
 
-> Cập nhật lần cuối: 2026-11-02  
+> Cập nhật lần cuối: 2026-11-03  
 > Branch chính: `main` | Remote: `git@github.com:owlsight203/sound_first.git`
 
 ---
@@ -14,7 +14,7 @@
 **Audio engine:** `audioplayers: ^6.0.0`  
 **Version hiện tại:** `1.0.0+1`
 
-**Mô tả:** App phát âm thanh thư giãn / ru ngủ (tiếng mưa, brown noise, gió, thiên nhiên) với hẹn giờ tắt tự động, bộ lọc danh mục, mini player và màn hình thống kê lượt nghe.
+**Mô tả:** App phát âm thanh thư giãn / ru ngủ (tiếng mưa, brown noise, gió, thiên nhiên) với hẹn giờ tắt tự động, bộ lọc danh mục, mini player, màn hình thống kê và trung tâm cá nhân / cài đặt.
 
 ---
 
@@ -22,14 +22,14 @@
 
 ```
 lib/
-├── main.dart                        # Entry point, SimpleAudioScreen (Trang Chủ)
-├── navigation_helper.dart           # Điều phối chuyển tab toàn cục
+├── main.dart                        # Entry point, SimpleAudioScreen (Trang Chủ) + Avatar mở Profile ở góc phải
+├── navigation_helper.dart           # Điều phối chuyển tab toàn cục (4 tab)
 │
 ├── main_page/
 │   ├── top/
 │   │   ├── banner_menu.dart         # Banner "Gói Thư Giãn Đỉnh Cao" + CTA
 │   │   ├── menu_category.dart       # Chip lọc danh mục ngang
-│   │   └── stat_card.dart           # Widget thẻ thống kê nhỏ (unused hiện tại)
+│   │   └── stat_card.dart           # Widget thẻ thống kê nhỏ
 │   └── body/
 │       ├── audio_model.dart         # Model: AudioModel (title, subtitle, path, category…)
 │       ├── audio_provider.dart      # Riverpod providers: audioList, currentAudio, isPlaying, controller
@@ -39,17 +39,30 @@ lib/
 │
 ├── footer/
 │   ├── play_footer.dart             # Mini player nổi (title, play/pause, ảnh)
-│   ├── bottom_navigation_menu.dart  # BottomNavigationBar 4 tab
+│   ├── bottom_navigation_menu.dart  # BottomNavigationBar 4 tab (Avatar tròn ở Tab 4)
 │   └── bottom_navigation_menu_controller.dart  # StateProvider<int> currentBottomTabProvider
 │
 ├── library/
 │   └── library_page.dart            # Tab "Chủ Đề" — toàn bộ danh sách + lọc danh mục
 │
 ├── stats/
-│   └── stats_screen.dart            # ✅ MỚI — Màn hình Thống Kê Lượt Nghe
+│   └── stats_screen.dart            # Tab "Thống Kê" — Màn hình Thống Kê Lượt Nghe
+│
+├── profile/                         # ✅ MỚI — Màn hình Cá Nhân & Cài Đặt (avt_setting_req.txt)
+│   ├── profile_screen.dart          # Màn hình chính Tab 4 (kết nối mini player, PRO link)
+│   └── widgets/
+│       ├── profile_top_bar.dart     # Top bar: Logo Nocturne + Streak + Gems + FULL
+│       ├── profile_header.dart      # Avatar tròn + Tên người dùng + ID + Danh hiệu
+│       ├── level_progress_card.dart # Card tiến trình Level 9 (XP bar + nhận thưởng)
+│       ├── stats_quick_row.dart     # 3 ô thống kê nhanh (Chuỗi ngủ, Mộng tưởng, Top %)
+│       ├── wardrobe_section.dart    # Tủ đồ Avatar & Linh vật (4 thẻ Cú đêm)
+│       ├── special_pet_banner.dart  # Banner linh vật độc quyền PRO: Mèo Thiền Định
+│       ├── sleep_habits_section.dart# Mục tiêu & thói quen ngủ (Giờ ngủ, Âm thanh, Nhắc nhở)
+│       ├── app_settings_section.dart# Cài đặt app (Banner PRO, Hi-Fi Lossless, Chạy nền, Backup JSON)
+│       └── support_footer.dart      # Hỗ trợ FAQ, Đánh giá 5 sao, Phiên bản app
 │
 └── pro/
-    ├── pro_screen.dart              # Tab "Pro Club" — màn hình nâng cấp
+    ├── pro_screen.dart              # Màn hình chi tiết Pro Club (truy cập từ Banner PRO trong Profile)
     └── widgets/
         ├── pro_header.dart
         ├── pro_title.dart
@@ -65,12 +78,16 @@ lib/
 
 ## 📱 Màn hình & Navigation
 
-| Tab | Index | Screen | File |
-|-----|-------|--------|------|
-| Trang chủ | 0 | `SimpleAudioScreen` | `main.dart` |
-| Chủ Đề | 1 | `LibraryPage` | `library/library_page.dart` |
-| Thống Kê | 2 | `StatsScreen` | `stats/stats_screen.dart` ✅ |
-| Pro Club | 3 | `ProScreen` | `pro/pro_screen.dart` |
+| Tab | Index | Screen | File | Mô tả |
+|-----|-------|--------|------|-------|
+| Trang chủ | 0 | `SimpleAudioScreen` | `main.dart` | Khám phá âm thanh, banner, timer, mini player |
+| Chủ Đề | 1 | `LibraryPage` | `library/library_page.dart` | Danh sách đầy đủ các bản phối |
+| Thống Kê | 2 | `StatsScreen` | `stats/stats_screen.dart` | Biểu đồ tuần, top âm thanh, lời khuyên Cú |
+| Cá nhân | 3 | `ProfileScreen` | `profile/profile_screen.dart` | Avatar, tủ đồ, thói quen ngủ, cài đặt & PRO |
+
+**Truy cập nhanh vào Cá nhân (Profile/Settings):**
+1. Nhấn vào **Tab 4 (Cá nhân)** ở thanh Bottom Navigation Bar (icon avatar tròn 🦉).
+2. Nhấn vào **Avatar thu nhỏ** ở góc trên bên phải AppBar của Trang chủ (`main.dart`).
 
 **Logic navigation:** `navigation_helper.dart → handleTabNavigation()`  
 - Tab 0: `Navigator.popUntil(isFirst)`  

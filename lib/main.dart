@@ -81,9 +81,30 @@ class _SimpleAudioScreenState extends ConsumerState<SimpleAudioScreen> {
         backgroundColor: const Color(0xFF1E1E2C),
         elevation: 0,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.favorite_border_rounded, color: Colors.white70),
-            onPressed: () {},
+          Padding(
+            padding: const EdgeInsets.only(right: 14),
+            child: Center(
+              child: GestureDetector(
+                onTap: () {
+                  handleTabNavigation(context, ref, 3);
+                },
+                child: Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: const Color(0xFF161E2C),
+                    border: Border.all(
+                      color: const Color(0xFF00C853),
+                      width: 1.5,
+                    ),
+                  ),
+                  child: const Center(
+                    child: Text('🦉', style: TextStyle(fontSize: 18)),
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),

@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'library/library_page.dart';
-import 'pro/pro_screen.dart';
+import 'profile/profile_screen.dart';
 import 'stats/stats_screen.dart';
 import 'footer/bottom_navigation_menu_controller.dart';
 
@@ -39,11 +39,11 @@ void handleTabNavigation(BuildContext context, WidgetRef ref, int targetIndex) {
       });
     }
   } else if (targetIndex == 3) {
-    // Sang Pro Club (ProScreen)
+    // Sang Cá nhân / Tài khoản (ProfileScreen)
     if (currentIndex == 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ProScreen()),
+        MaterialPageRoute(builder: (context) => const ProfileScreen()),
       ).then((_) {
         // Khi quay lại Trang Chủ, tự động trả tab về 0
         ref.read(currentBottomTabProvider.notifier).state = 0;
@@ -51,7 +51,7 @@ void handleTabNavigation(BuildContext context, WidgetRef ref, int targetIndex) {
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const ProScreen()),
+        MaterialPageRoute(builder: (context) => const ProfileScreen()),
       ).then((_) {
         ref.read(currentBottomTabProvider.notifier).state = 0;
       });

@@ -14,7 +14,7 @@ class BottomNavigationMenu extends ConsumerWidget {
     final bool isChooseHome = currentIndex == 0;
     final bool isChooseLibrary = currentIndex == 1;
     final bool isChooseStats = currentIndex == 2;
-    final bool isChoosePro = currentIndex == 3;
+    final bool isChooseProfile = currentIndex == 3;
 
     return Container(
       decoration: BoxDecoration(
@@ -64,11 +64,26 @@ class BottomNavigationMenu extends ConsumerWidget {
               label: 'Thống kê',
             ),
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.workspace_premium_rounded,
-                color: isChoosePro ? const Color(0xFF00C853) : Colors.grey.shade500,
+              icon: Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: isChooseProfile
+                      ? const Color(0xFF1B382B)
+                      : const Color(0xFF202938),
+                  border: Border.all(
+                    color: isChooseProfile
+                        ? const Color(0xFF00C853)
+                        : Colors.transparent,
+                    width: 1.5,
+                  ),
+                ),
+                child: const Center(
+                  child: Text('🦉', style: TextStyle(fontSize: 13)),
+                ),
               ),
-              label: 'Pro Club',
+              label: 'Cá nhân',
             ),
           ],
         ),

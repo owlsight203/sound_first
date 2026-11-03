@@ -10,64 +10,78 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Thống Kê Giấc Ngủ',
+      title: 'Nocturne Profile',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xFF0F141C),
         fontFamily: 'Roboto',
       ),
-      home: const SleepStatisticsScreen(),
+      home: const ProfileSettingsScreen(),
     );
   }
 }
 
-class SleepStatisticsScreen extends StatefulWidget {
-  const SleepStatisticsScreen({super.key});
+class ProfileSettingsScreen extends StatefulWidget {
+  const ProfileSettingsScreen({super.key});
 
   @override
-  State<SleepStatisticsScreen> createState() => _SleepStatisticsScreenState();
+  State<ProfileSettingsScreen> createState() => _ProfileSettingsScreenState();
 }
 
-class _SleepStatisticsScreenState extends State<SleepStatisticsScreen> {
-  // Trạng thái tab thời gian: 0 = Tuần Này, 1 = Tháng Này, 2 = Mọi Lúc
-  int selectedTab = 0;
+class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
+  // Trạng thái các cài đặt Switch
+  bool isBedtimeReminderOn = true;
+  bool isLosslessOn = true;
+  bool isBackgroundPlayOn = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 1. HEADER & UPDATE BUTTON
-              _buildHeader(),
+              // 1. TOP APP BAR (Logo, Streak, Gems, Full badge)
+              _buildTopBar(),
+              const SizedBox(height: 24),
+
+              // 2. PROFILE AVATAR & LEVEL INFO
+              _buildProfileHeader(),
               const SizedBox(height: 16),
 
-              // 2. TIME FILTER TABS
-              _buildTimeTabs(),
+              // 3. LEVEL PROGRESS CARD
+              _buildLevelProgressCard(),
               const SizedBox(height: 16),
 
-              // 3. STATS GRID (Tổng ru ngủ, Chuỗi ngủ, Vào giấc TB, Nghe nhiều nhất)
-              _buildStatsGrid(),
+              // 4. STATS QUICK OVERVIEW (7 Ngày, 240 Mộng Tưởng, Top 5%)
+              _buildStatsRow(),
+              const SizedBox(height: 24),
+
+              // 5. AVATAR & PET WARDROBE (Tủ đồ)
+              _buildWardrobeSection(),
               const SizedBox(height: 16),
 
-              // 4. WEEKLY DURATION BANNER
-              _buildWeeklyDurationBanner(),
+              // 6. SPECIAL PRO PET BANNER
+              _buildSpecialPetBanner(),
               const SizedBox(height: 16),
 
-              // 5. WEEKLY CHART (Biểu đồ cột T2 - CN)
-              _buildWeeklyChartSection(),
-              const SizedBox(height: 16),
+              // 7. SLEEP HABITS & GOALS
+              _buildSleepHabitsSection(),
+              const SizedBox(height: 24),
 
-              // 6. TOP FAVORITE SOUNDS LIST
-              _buildTopSoundsSection(),
-              const SizedBox(height: 16),
+              // 8. APP SETTINGS SECTION
+              _buildAppSettingsSection(),
+              const SizedBox(height: 24),
 
-              // 7. AI ADVICE & SHARE BUTTON
-              _buildAiAdviceCard(),
+              // 9. SUPPORT & FOOTER VERSION
+              _buildSupportFooter(),
+              const SizedBox(height: 24),
+
+              // 10. MINI PLAYER AT BOTTOM
+              _buildMiniPlayer(),
             ],
           ),
         ),
@@ -77,424 +91,179 @@ class _SleepStatisticsScreenState extends State<SleepStatisticsScreen> {
 
   // --- WIDGET COMPONENTS ---
 
-  Widget _buildHeader() {
+  Widget _buildTopBar() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text(
-              'Thống Kê Lượt Nghe',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
-            ),
-            SizedBox(height: 4),
-            Text(
-              'Nhật ký giải phóng tâm trí và chu kỳ ngủ',
-              style: TextStyle(fontSize: 12, color: Colors.white60),
-            ),
-          ],
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-          decoration: BoxDecoration(
-            color: const Color(0xFF1B382B),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: const Color(0xFF2EE6A6).withOpacity(0.3)),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Container(
-                width: 6,
-                height: 6,
-                decoration: BoxDecoration(color: Color(0xFF2EE6A6), shape: BoxShape.circle),
-              ),
-              SizedBox(width: 6),
-              Text(
-                'CẬP NHẬT',
-                style: TextStyle(color: Color(0xFF2EE6A6), fontSize: 11, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTimeTabs() {
-    List<String> tabs = ['Tuần Này', 'Tháng Này', 'Mọi Lúc'];
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: const Color(0xFF161E2C),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: List.generate(tabs.length, (index) {
-          bool isSelected = selectedTab == index;
-          return Expanded(
-            child: GestureDetector(
-              onTap: () => setState(() => selectedTab = index),
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  color: isSelected ? const Color(0xFF2EE6A6) : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  tabs[index],
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: isSelected ? Colors.black87 : Colors.white60,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13,
-                  ),
-                ),
-              ),
-            ),
-          );
-        }),
-      ),
-    );
-  }
-
-  Widget _buildStatsGrid() {
-    return GridView.count(
-      crossAxisCount: 2,
-      crossAxisSpacing: 12,
-      mainAxisSpacing: 12,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      childAspectRatio: 1.15,
-      children: [
-        // Thẻ 1: Tổng ru ngủ
-        _buildCard(
-          icon: Icons.nightlight_round,
-          iconColor: Colors.blueAccent,
-          badgeText: '~+14%',
-          badgeColor: const Color(0xFF1B382B),
-          badgeTextColor: const Color(0xFF2EE6A6),
-          title: 'TỔNG RU NGỦ',
-          content: '38h 45m',
-          subContent: 'TB ~5.5h / đêm',
-        ),
-        // Thẻ 2: Chuỗi ngủ chuẩn
-        _buildCard(
-          icon: Icons.local_fire_department,
-          iconColor: Colors.orangeAccent,
-          badgeText: 'Kỷ Lục',
-          badgeColor: const Color(0xFF33291B),
-          badgeTextColor: const Color(0xFFFFC107),
-          title: 'CHUỖI NGỦ CHUẨN',
-          content: '7 Đêm 🔥',
-          subContent: 'Đúng giờ 23:00',
-        ),
-        // Thẻ 3: Vào giấc TB
-        _buildCard(
-          icon: Icons.favorite,
-          iconColor: Colors.redAccent,
-          badgeText: '-35%',
-          badgeColor: const Color(0xFF1B382B),
-          badgeTextColor: const Color(0xFF2EE6A6),
-          title: 'VÀO GIẤC TB',
-          content: '12 Phút',
-          subContent: 'Nhanh hơn 8p',
-          subColor: const Color(0xFF2EE6A6),
-        ),
-        // Thẻ 4: Nghe nhiều nhất
-        _buildCard(
-          icon: Icons.cloud_queue,
-          iconColor: Colors.lightBlueAccent,
-          badgeText: '#1 Yêu Thích',
-          badgeColor: const Color(0xFF192538),
-          badgeTextColor: Colors.lightBlueAccent,
-          title: 'NGHE NHIỀU NHẤT',
-          content: 'Mưa Mái Tôn',
-          subContent: '14.2 giờ thư giãn',
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCard({
-    required IconData icon,
-    required Color iconColor,
-    required String badgeText,
-    required Color badgeColor,
-    required Color badgeTextColor,
-    required String title,
-    required String content,
-    required String subContent,
-    Color? subColor,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: const Color(0xFF161E2C),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFF222B38)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF202938),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(icon, color: iconColor, size: 16),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: badgeColor,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text(
-                  badgeText,
-                  style: TextStyle(color: badgeTextColor, fontSize: 10, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(fontSize: 11, color: Colors.white60, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                content,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                subContent,
-                style: TextStyle(fontSize: 11, color: subColor ?? Colors.white60),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildWeeklyDurationBanner() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF161E2C),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFF222B38)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
-                'Thời Lượng Ru Ngủ Trong Tuần',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-              SizedBox(height: 4),
-              Text(
-                'Mục tiêu tối ưu: 8 giờ mỗi đêm',
-                style: TextStyle(fontSize: 12, color: Colors.white60),
-              ),
-            ],
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1B382B),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: const [
-                Icon(Icons.verified_outlined, color: Color(0xFF2EE6A6), size: 14),
-                SizedBox(width: 4),
-                Text(
-                  '+2.4h vs T.Trước',
-                  style: TextStyle(color: Color(0xFF2EE6A6), fontSize: 11, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildWeeklyChartSection() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF161E2C),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFF222B38)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Mục tiêu: 8h',
-            style: TextStyle(fontSize: 12, color: Colors.white54),
-          ),
-          const SizedBox(height: 16),
-          // Biểu đồ cột giả lập
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              _buildChartBar('4.8h', 0.5, false, 'T2'),
-              _buildChartBar('5.2h', 0.55, false, 'T3'),
-              _buildChartBar('6.0h', 0.65, false, 'T4'),
-              _buildChartBar('4.5h', 0.45, false, 'T5'),
-              _buildChartBar('6.8h', 0.75, false, 'T6'),
-              _buildChartBar('7.4h', 0.9, true, 'T7'),
-              _buildChartBar('7.5h', 0.95, true, 'CN'),
-            ],
-          ),
-          const SizedBox(height: 20),
-          const Divider(color: Color(0xFF222B38), thickness: 1),
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Expanded(
-                child: Text(
-                  'Cuối tuần (T7 – CN): Ngủ sâu nhất đạt đỉnh 7.5h',
-                  style: TextStyle(fontSize: 12, color: Colors.white70),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF332A1B),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Text(
-                  'Đạt Chuẩn\n94%',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Color(0xFFFFC107), fontSize: 11, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildChartBar(String value, double heightFactor, bool isHighlight, String day) {
-    return Column(
-      children: [
-        Text(value, style: TextStyle(fontSize: 10, color: isHighlight ? const Color(0xFF2EE6A6) : Colors.white60)),
-        const SizedBox(height: 6),
-        Container(
-          width: 28,
-          height: 100 * heightFactor,
-          decoration: BoxDecoration(
-            color: isHighlight ? const Color(0xFF2EE6A6) : const Color(0xFF202938),
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(day, style: TextStyle(fontSize: 12, color: isHighlight ? const Color(0xFF2EE6A6) : Colors.white60, fontWeight: FontWeight.bold)),
-      ],
-    );
-  }
-
-  Widget _buildTopSoundsSection() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF161E2C),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFF222B38)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text(
-                'Top Âm Thanh Yêu Thích',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-              Icon(Icons.bar_chart, color: Colors.white60, size: 20),
-            ],
-          ),
-          const SizedBox(height: 6),
-          const Text(
-            'Phân bổ 38.5 giờ phát liên tục',
-            style: TextStyle(fontSize: 12, color: Colors.white60),
-          ),
-          const SizedBox(height: 16),
-          _buildSoundItem(rank: '1', icon: Icons.cloud_outlined, title: 'Mưa Trên Mái Tôn', time: '14.2 giờ nghe • 36% tổng số', percent: '36%', progress: 0.36),
-          const SizedBox(height: 14),
-          _buildSoundItem(rank: '2', icon: Icons.waves, title: 'Brown Noise Sóng Delta', time: '10.5 giờ nghe • 27% tổng số', percent: '27%', progress: 0.27),
-          const SizedBox(height: 14),
-          _buildSoundItem(rank: '3', icon: Icons.forest, title: 'Tiếng Gió Rừng Đêm', time: '7.8 giờ nghe • 20% tổng số', percent: '20%', progress: 0.20),
-          const SizedBox(height: 14),
-          _buildSoundItem(rank: '4', icon: Icons.local_fire_department, title: 'Lửa Than Bếp Ấm', time: '6.0 giờ nghe • 17% tổng số', percent: '17%', progress: 0.17),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSoundItem({required String rank, required IconData icon, required String title, required String time, required String percent, required double progress}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: const Color(0xFF202938),
+                color: const Color(0xFF161E2C),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFF2EE6A6), width: 1.5),
+              ),
+              child: const Text('🦉', style: TextStyle(fontSize: 18)),
+            ),
+            const SizedBox(width: 8),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text(
+                  'Nocturne',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
+                ),
+                Text(
+                  'Night Quest',
+                  style: TextStyle(fontSize: 11, color: Colors.white60),
+                ),
+              ],
+            ),
+            const SizedBox(width: 6),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1B382B),
                 borderRadius: BorderRadius.circular(6),
               ),
-              child: Text(rank, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Color(0xFF2EE6A6))),
+              child: const Text(
+                'SLEEP',
+                style: TextStyle(color: Color(0xFF2EE6A6), fontSize: 9, fontWeight: FontWeight.bold),
+              ),
             ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.white)),
-                  const SizedBox(height: 2),
-                  Text(time, style: const TextStyle(fontSize: 11, color: Colors.white60)),
+          ],
+        ),
+        Row(
+          children: [
+            // Streak Badge
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: const Color(0xFF161E2C),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFF222B38)),
+              ),
+              child: Row(
+                children: const [
+                  Text('🔥', style: TextStyle(fontSize: 13)),
+                  SizedBox(width: 4),
+                  Text('7', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orangeAccent, fontSize: 13)),
                 ],
               ),
             ),
-            Text(percent, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF2EE6A6))),
+            const SizedBox(width: 8),
+            // Gems Badge
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: const Color(0xFF161E2C),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFF222B38)),
+              ),
+              child: Row(
+                children: const [
+                  Text('💎', style: TextStyle(fontSize: 13)),
+                  SizedBox(width: 4),
+                  Text('240', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.lightBlueAccent, fontSize: 13)),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            // FULL Badge
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1B382B),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFF2EE6A6).withOpacity(0.4)),
+              ),
+              child: Row(
+                children: const [
+                  Icon(Icons.bolt, color: Color(0xFF2EE6A6), size: 14),
+                  SizedBox(width: 2),
+                  Text('FULL', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF2EE6A6), fontSize: 12)),
+                ],
+              ),
+            ),
           ],
-        ),
-        const SizedBox(height: 8),
-        LinearProgressIndicator(
-          value: progress,
-          backgroundColor: const Color(0xFF202938),
-          color: const Color(0xFF2EE6A6),
-          minHeight: 4,
-          borderRadius: BorderRadius.circular(2),
         ),
       ],
     );
   }
 
-  Widget _buildAiAdviceCard() {
+  Widget _buildProfileHeader() {
+    return Column(
+      children: [
+        Center(
+          child: Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              Container(
+                width: 90,
+                height: 90,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: const Color(0xFF161E2C),
+                  border: Border.all(color: const Color(0xFF222B38), width: 3),
+                ),
+                child: const Center(
+                  child: Text('🦉', style: TextStyle(fontSize: 42)),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: const BoxDecoration(
+                  color: Color(0xFF2EE6A6),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.edit, color: Colors.black, size: 14),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Text(
+              'Thần Cú Say Ngủ',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+            ),
+            SizedBox(width: 6),
+            Icon(Icons.verified, color: Color(0xFF2EE6A6), size: 16),
+          ],
+        ),
+        const SizedBox(height: 4),
+        const Text(
+          '#NOCT-8821 • Cú Trưởng Thành',
+          style: TextStyle(fontSize: 12, color: Colors.white60),
+        ),
+        const SizedBox(height: 10),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: const Color(0xFF332A1B),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0xFFFFC107).withOpacity(0.3)),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              Text('🧘', style: TextStyle(fontSize: 13)),
+              SizedBox(width: 6),
+              Text(
+                'Bậc Thầy Tĩnh Tâm',
+                style: TextStyle(color: Color(0xFFFFC107), fontSize: 12, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLevelProgressCard() {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -506,40 +275,23 @@ class _SleepStatisticsScreenState extends State<SleepStatisticsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: [
-              const Text('🦉', style: TextStyle(fontSize: 18)),
-              const SizedBox(width: 8),
-              const Text(
-                'Lời Khuyên Cú Nocturne',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white),
-              ),
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1B382B),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Text('AI Sync', style: TextStyle(fontSize: 10, color: Color(0xFF2EE6A6), fontWeight: FontWeight.bold)),
-              ),
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text('✪ Tiến Trình Cấp 9', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.white)),
+              Text('820 / 1000 XP', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF2EE6A6))),
             ],
           ),
-          const SizedBox(height: 10),
-          RichText(
-            text: const TextSpan(
-              style: TextStyle(fontSize: 13, color: Colors.white70, height: 1.4),
-              children: [
-                TextSpan(text: 'Bạn thường vào giấc dễ nhất lúc '),
-                TextSpan(text: '23:15', style: TextStyle(color: Color(0xFF2EE6A6), fontWeight: FontWeight.bold)),
-                TextSpan(text: ' khi kết hợp '),
-                TextSpan(text: 'Mưa Mái Tôn', style: TextStyle(color: Color(0xFF2EE6A6), fontWeight: FontWeight.bold)),
-                TextSpan(text: ' + '),
-                TextSpan(text: 'Sóng Não Alpha', style: TextStyle(color: Color(0xFFFFC107), fontWeight: FontWeight.bold)),
-                TextSpan(text: '. Giữ vững phong độ này để nhận huy hiệu "Bậc Thầy Tĩnh Tâm" nhé!'),
-              ],
+          const SizedBox(height: 12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: const LinearProgressIndicator(
+              value: 0.82,
+              backgroundColor: Color(0xFF202938),
+              color: Color(0xFF2EE6A6),
+              minHeight: 8,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 14),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
@@ -547,23 +299,522 @@ class _SleepStatisticsScreenState extends State<SleepStatisticsScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF2EE6A6),
                 foregroundColor: Colors.black87,
-                padding: const EdgeInsets.symmetric(vertical: 14),
+                padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 elevation: 4,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
-                  Icon(Icons.share, size: 18),
-                  SizedBox(width: 8),
+                  Icon(Icons.card_giftcard, size: 16),
+                  SizedBox(width: 6),
                   Text(
-                    'Chia Sẻ Thành Tích Ngủ (+30 💎)',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    'Nhận Thưởng Cấp (+100 💎)',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                   ),
                 ],
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatsRow() {
+    return Row(
+      children: [
+        Expanded(child: _buildMiniStatBox('🔥', '7 Ngày', 'Chuỗi Ngủ', Colors.orangeAccent)),
+        const SizedBox(width: 10),
+        Expanded(child: _buildMiniStatBox('💎', '240', 'Mộng Tưởng', Colors.lightBlueAccent)),
+        const SizedBox(width: 10),
+        Expanded(child: _buildMiniStatBox('🏆', 'Top 5%', 'Tuần Này', const Color(0xFFFFC107))),
+      ],
+    );
+  }
+
+  Widget _buildMiniStatBox(String emoji, String value, String label, Color valueColor) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF161E2C),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFF222B38)),
+      ),
+      child: Column(
+        children: [
+          Text(emoji, style: const TextStyle(fontSize: 16)),
+          const SizedBox(height: 4),
+          Text(value, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: valueColor)),
+          const SizedBox(height: 2),
+          Text(label, style: const TextStyle(fontSize: 11, color: Colors.white60)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWardrobeSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: const [
+            Text('👕 Tủ Đồ Avatar & Linh Vật Đêm', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white)),
+            Text('2/5 Mở Khóa', style: TextStyle(fontSize: 12, color: Color(0xFF2EE6A6), fontWeight: FontWeight.bold)),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(child: _buildAvatarCard('Cú Mũ Ngủ', 'Mặc định ban đầu', 'Đang Dùng', true, '🦉')),
+            const SizedBox(width: 12),
+            Expanded(child: _buildAvatarCard('Cú Chiêm Tinh', 'Cấp 5', 'Sử Dụng', false, '🧙‍♂️', isReady: true)),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(child: _buildAvatarCard('Cú Hoàng Gia', '300 💎', 'Mở Khóa', false, '👑', isLockedByGems: true)),
+            const SizedBox(width: 12),
+            Expanded(child: _buildAvatarCard('Cú DJ Lo-Fi', 'Yêu cầu Cấp 10', 'Chưa Mở', false, '🎧', isLocked: true)),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAvatarCard(String name, String sub, String btnText, bool isUsing, String emoji, {bool isReady = false, bool isLockedByGems = false, bool isLocked = false}) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFF161E2C),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: isUsing ? const Color(0xFF2EE6A6) : const Color(0xFF222B38)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(emoji, style: const TextStyle(fontSize: 24)),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: isUsing ? const Color(0xFF1B382B) : const Color(0xFF202938),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  isUsing ? 'Đang Dùng' : (isReady ? 'Cấp 5' : sub),
+                  style: TextStyle(color: isUsing ? const Color(0xFF2EE6A6) : Colors.white60, fontSize: 10, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.white)),
+          const SizedBox(height: 2),
+          Text(isReady ? 'Đã Sẵn Sàng' : sub, style: TextStyle(fontSize: 11, color: isReady ? const Color(0xFF2EE6A6) : Colors.white60)),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: isUsing ? const Color(0xFF202938) : (isLocked || isLockedByGems ? const Color(0xFF202938) : const Color(0xFF2EE6A6)),
+                foregroundColor: isUsing || isLocked || isLockedByGems ? Colors.white70 : Colors.black87,
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                elevation: 0,
+              ),
+              child: Text(btnText, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSpecialPetBanner() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF161E2C),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFFFFC107).withOpacity(0.4)),
+      ),
+      child: Row(
+        children: [
+          const Text('🐱', style: TextStyle(fontSize: 32)),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: const [
+                    Text('Mèo Thiền Định', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white)),
+                    SizedBox(width: 6),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF33291B),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text('PRO', style: TextStyle(fontSize: 9, color: Color(0xFFFFC107), fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                const Text(
+                  'Linh vật độc quyền chu kỳ Trăng tròn',
+                  style: TextStyle(fontSize: 11, color: Colors.white60),
+                ),
+              ],
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF42A5F5),
+              foregroundColor: Colors.black,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            child: const Text('Khám Phá', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSleepHabitsSection() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF161E2C),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFF222B38)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('🌙 Thói Quen & Mục Tiêu Ngủ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white)),
+          const SizedBox(height: 14),
+          _buildHabitItem(Icons.alarm, 'Mục tiêu giờ ngủ', '23:00 hàng đêm', 'Đổi Giờ'),
+          const Divider(color: Color(0xFF222B38), height: 24),
+          _buildHabitItem(Icons.surround_sound, 'Âm thanh khởi động', 'Mưa Mái Tôn + Gió Rừ...', 'Chọn Lại'),
+          const Divider(color: Color(0xFF222B38), height: 24),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.notifications_active, color: Color(0xFFFFC107), size: 20),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text('Nhắc nhở chuẩn bị ngủ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.white)),
+                      SizedBox(height: 2),
+                      Text('Báo thức êm dịu lúc 22:30', style: TextStyle(fontSize: 11, color: Colors.white60)),
+                    ],
+                  ),
+                ],
+              ),
+              Switch(
+                value: isBedtimeReminderOn,
+                onChanged: (val) => setState(() => isBedtimeReminderOn = val),
+                activeColor: Colors.black,
+                activeTrackColor: const Color(0xFF2EE6A6),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHabitItem(IconData icon, String title, String subtitle, String actionText) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Icon(icon, color: const Color(0xFF2EE6A6), size: 20),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.white)),
+                const SizedBox(height: 2),
+                Text(subtitle, style: const TextStyle(fontSize: 11, color: Colors.white60)),
+              ],
+            ),
+          ],
+        ),
+        OutlinedButton(
+          onPressed: () {},
+          style: OutlinedButton.styleFrom(
+            side: const BorderSide(color: Color(0xFF222B38)),
+            backgroundColor: const Color(0xFF202938),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+          ),
+          child: Text(actionText, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAppSettingsSection() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF161E2C),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFF222B38)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('⚙️ Cài Đặt Ứng Dụng', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white)),
+          const SizedBox(height: 14),
+          // Banner nâng cấp PRO
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF33291B), Color(0xFF4A3B1F)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: const Color(0xFFFFC107).withOpacity(0.5)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text('Nocturne PRO Unlimited', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFFFFC107))),
+                      SizedBox(height: 2),
+                      Text('Mở khóa 80+ âm thanh Hi-Fi & Không QC', style: TextStyle(fontSize: 11, color: Colors.white70)),
+                    ],
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFFC107),
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  ),
+                  child: const Text('Nâng Cấp', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          // Switch: Âm thanh 96kHz Lossless
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.high_quality, color: Color(0xFF2EE6A6), size: 20),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text('Âm thanh 96kHz Lossless', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.white)),
+                      SizedBox(height: 2),
+                      Text('Tối ưu độ chi tiết tầng âm', style: TextStyle(fontSize: 11, color: Colors.white60)),
+                    ],
+                  ),
+                ],
+              ),
+              Switch(
+                value: isLosslessOn,
+                onChanged: (val) => setState(() => isLosslessOn = val),
+                activeColor: Colors.black,
+                activeTrackColor: const Color(0xFF2EE6A6),
+              ),
+            ],
+          ),
+          const Divider(color: Color(0xFF222B38), height: 24),
+          // Switch: Phát khi khóa màn hình
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.screen_lock_portrait, color: Color(0xFF2EE6A6), size: 20),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text('Phát khi khóa màn hình', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.white)),
+                      SizedBox(height: 2),
+                      Text('Tiết kiệm pin thiết bị qua đêm', style: TextStyle(fontSize: 11, color: Colors.white60)),
+                    ],
+                  ),
+                ],
+              ),
+              Switch(
+                value: isBackgroundPlayOn,
+                onChanged: (val) => setState(() => isBackgroundPlayOn = val),
+                activeColor: Colors.black,
+                activeTrackColor: const Color(0xFF2EE6A6),
+              ),
+            ],
+          ),
+          const Divider(color: Color(0xFF222B38), height: 24),
+          // Xuất file JSON
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.save_alt, color: Color(0xFF2EE6A6), size: 20),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text('Sao lưu tiến trình & Streak', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.white)),
+                      SizedBox(height: 2),
+                      Text('Lưu file JSON cục bộ bảo mật 100%', style: TextStyle(fontSize: 11, color: Colors.white60)),
+                    ],
+                  ),
+                ],
+              ),
+              OutlinedButton(
+                onPressed: () {},
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Color(0xFF222B38)),
+                  backgroundColor: const Color(0xFF202938),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                ),
+                child: const Text('Xuất File', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSupportFooter() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: () {},
+                icon: const Icon(Icons.help_outline, size: 16),
+                label: const Text('Hỗ Trợ & FAQ', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF161E2C),
+                  foregroundColor: Colors.white,
+                  side: const BorderSide(color: Color(0xFF222B38)),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: () {},
+                icon: const Icon(Icons.star, size: 16, color: Color(0xFFFFC107)),
+                label: const Text('Đánh Giá 5 Sao', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF161E2C),
+                  foregroundColor: Colors.white,
+                  side: const BorderSide(color: Color(0xFF222B38)),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        const Text(
+          'Nocturne Sleep Studio • Bản dựng v2.4.1 (Stable)',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 11, color: Colors.white38),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMiniPlayer() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF161E2C),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFF222B38)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: const Color(0xFF202938),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(Icons.cloud, color: Color(0xFF2EE6A6), size: 24),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: const [
+                    Text(
+                      'Rain & Thun...',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.white),
+                    ),
+                    SizedBox(width: 6),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF1B382B),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text('LIVE', style: TextStyle(fontSize: 8, color: Color(0xFF2EE6A6), fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                const Text(
+                  '3 Active Sounds • 45m ...',
+                  style: TextStyle(fontSize: 11, color: Colors.white60),
+                ),
+              ],
+            ),
+          ),
+          const Icon(Icons.timer_outlined, color: Colors.white60, size: 20),
+          const SizedBox(width: 14),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: const BoxDecoration(
+              color: Color(0xFF2EE6A6),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.pause, color: Colors.black, size: 18),
+          ),
+          const SizedBox(width: 12),
+          const Icon(Icons.keyboard_arrow_up, color: Colors.white60, size: 20),
         ],
       ),
     );

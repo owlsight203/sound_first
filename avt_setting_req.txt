@@ -1,0 +1,7 @@
+Dọn dẹp góc trên bên phải: Hiện tại góc trên bên phải đang có icon trái tim. Bạn có thể chuyển icon trái tim này vào khu vực danh sách yêu thích, và thay vào đó là Avatar thu nhỏ của người dùng (hoặc icon chuông thông báo / bánh răng cài đặt).
+
+Tái cấu trúc thanh Navigation Bar phía dưới:
+
+Giữ lại 3 tab cốt lõi: Trang chủ, Khám phá/Chủ đề, Thống kê.
+
+Đổi tab thứ 4 từ Pro Club thành Cá nhân / Tài khoản (hiển thị hình ảnh Avatar tròn của người dùng). Khi bấm vào đây, người dùng vừa xem được quyền lợi Pro, vừa dễ dàng tìm thấy mục Cài đặt (Settings) và quản lý tài khoản của mình.

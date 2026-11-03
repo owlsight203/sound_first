@@ -6,7 +6,7 @@ class StatsQuickRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return const Row(
       children: [
         Expanded(
             child: _MiniStatBox(
@@ -14,20 +14,20 @@ class StatsQuickRow extends StatelessWidget {
                 value: '7 Ngày',
                 label: 'Chuỗi Ngủ',
                 valueColor: Colors.orangeAccent)),
-        const SizedBox(width: 10),
+        SizedBox(width: 10),
         Expanded(
             child: _MiniStatBox(
                 emoji: '💎',
                 value: '240',
                 label: 'Mộng Tưởng',
                 valueColor: Colors.lightBlueAccent)),
-        const SizedBox(width: 10),
+        SizedBox(width: 10),
         Expanded(
             child: _MiniStatBox(
                 emoji: '🏆',
                 value: 'Top 5%',
                 label: 'Tuần Này',
-                valueColor: const Color(0xFFFFC107))),
+                valueColor: Color(0xFFFFC107))),
       ],
     );
   }

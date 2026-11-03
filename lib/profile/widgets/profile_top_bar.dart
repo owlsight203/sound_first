@@ -59,8 +59,8 @@ class ProfileTopBar extends StatelessWidget {
         // ── Right: Streak + Gems + FULL ──────────────────────
         Row(
           children: [
-            _BadgeChip(
-              child: const Row(children: [
+            const _BadgeChip(
+              child: Row(children: [
                 Text('🔥', style: TextStyle(fontSize: 13)),
                 SizedBox(width: 4),
                 Text('7',
@@ -71,8 +71,8 @@ class ProfileTopBar extends StatelessWidget {
               ]),
             ),
             const SizedBox(width: 8),
-            _BadgeChip(
-              child: const Row(children: [
+            const _BadgeChip(
+              child: Row(children: [
                 Text('💎', style: TextStyle(fontSize: 13)),
                 SizedBox(width: 4),
                 Text('240',
