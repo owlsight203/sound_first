@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../footer/bottom_navigation_menu.dart';
 import '../footer/bottom_navigation_menu_controller.dart';
+import '../navigation_helper.dart';
 import 'widgets/pro_header.dart';
 import 'widgets/pro_title.dart';
 import 'widgets/pro_rating_card.dart';
@@ -52,7 +53,7 @@ class _ProScreenState extends ConsumerState<ProScreen> {
                   if (Navigator.canPop(context)) {
                     Navigator.pop(context);
                   } else {
-                    ref.read(currentBottomTabProvider.notifier).state = 0;
+                    handleTabNavigation(context, ref, 0);
                   }
                 },
               ),
