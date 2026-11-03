@@ -144,8 +144,9 @@ lib/
 - Tạo `lib/stats/stats_screen.dart` — màn hình Thống Kê hoàn chỉnh
 - Kết nối Tab 2 trong `navigation_helper.dart` (thay snackbar "đang phát triển")
 
-### Commit `b6ddf64` — ✅ Add stats (push)
-- Push toàn bộ lên `origin/main`
+### Commit `215990f` — ✅ Close button on ProScreen
+- Thêm nút đóng (X) dạng hình tròn nổi bật ở góc trên bên phải của `ProHeader`
+- Xử lý đóng an toàn: `Navigator.pop(context)` nếu mở dạng sub-page, hoặc điều hướng về Trang Chủ qua `handleTabNavigation` nếu là màn hình gốc
 
 ---
 
