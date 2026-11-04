@@ -4,9 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../footer/bottom_navigation_menu.dart';
 import '../footer/play_footer.dart';
 import '../main_page/body/audio_provider.dart';
+import '../navbar/global_navbar.dart';
+import '../navbar/page_header.dart';
 import '../pro/pro_screen.dart';
 
-import 'widgets/profile_top_bar.dart';
 import 'widgets/profile_header.dart';
 import 'widgets/level_progress_card.dart';
 import 'widgets/stats_quick_row.dart';
@@ -39,6 +40,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xFF0F141C),
+      appBar: const GlobalNavbar(),
       body: SafeArea(
         bottom: false,
         child: Stack(
@@ -48,9 +50,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 1. TOP APP BAR (Logo, Streak, Gems, Full badge)
-                  const ProfileTopBar(),
-                  const SizedBox(height: 24),
+                  // 1. PAGE HEADER (Tầng 2 - Tiêu đề trang chuẩn hóa)
+                  const PageHeader(
+                    title: 'Hồ Sơ Cá Nhân',
+                    subtitle: 'Quản lý thông tin tài khoản và thiết lập thói quen ngủ',
+                  ),
 
                   // 2. PROFILE AVATAR & LEVEL INFO
                   const ProfileHeader(),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../navbar/global_navbar.dart';
+import '../navbar/page_header.dart';
 import '../main_page/top/menu_category.dart';
 import '../main_page/body/audio_list_view.dart';
 import '../main_page/body/audio_provider.dart';
@@ -38,27 +40,7 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
 
     return Scaffold(
       backgroundColor: const Color(0xFF121216), // Màu nền tối sang trọng đồng bộ
-      appBar: AppBar(
-        automaticallyImplyLeading: false, // Không hiển thị nút mũi tên quay lại
-        title: const Text(
-          'Nocturn Sleep',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: const Color(0xFF1E1E2C),
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search_rounded, color: Colors.white70),
-            onPressed: () {
-              // Xử lý tìm kiếm
-            },
-          ),
-        ],
-      ),
+      appBar: const GlobalNavbar(),
       body: SafeArea(
         bottom: false,
         child: Stack(
@@ -68,23 +50,16 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Tất Cả Bản Phối',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                  PageHeader(
+                    title: 'Tất Cả Bản Phối',
+                    subtitle: 'Khám phá toàn bộ danh sách âm thanh thư giãn của bạn',
+                    action: IconButton(
+                      icon: const Icon(Icons.search_rounded, color: Colors.white70),
+                      onPressed: () {
+                        // Xử lý tìm kiếm
+                      },
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Khám phá toàn bộ danh sách âm thanh thư giãn của bạn',
-                    style: TextStyle(
-                      color: Colors.grey.shade400,
-                      fontSize: 13,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
 
                   // Thanh danh mục thể loại cho phép lọc trong Thư viện
                   MenuCategory(

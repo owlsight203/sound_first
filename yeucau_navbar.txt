@@ -1,0 +1,30 @@
+1. Cấu trúc chuẩn của Global Navbar (Thanh điều hướng chung)Navbar chung nên được đặt ở vị trí cao nhất (fixed/sticky top) và xuất hiện xuyên suốt trên mọi màn hình. Nó được chia thành 3 khu vực chính:Khu vực bên trái (Brand/Logo): Logo nhận diện thương hiệu hoặc tên ứng dụng (ví dụ: Icon chú cú + chữ Nocturne hoặc Nocturn Sleep). Có thể kèm theo một huy hiệu nhỏ định danh chế độ (ví dụ: nhãn SLEEP như ở hình 4).   Khu vực trung tâm (Global Search / Quick Links - Tùy chọn): Ô tìm kiếm nhanh hoặc các tab chuyển đổi nhanh (nếu cần). Nếu không có, có thể để trống để tạo khoảng thoáng (whitespace).Khu vực bên phải (User Actions & Status - Điểm cần đồng bộ nhất):Đây là nơi hiển thị các chỉ số cốt lõi xuyên suốt phiên người dùng (như chuỗi ngày streak  lửa $\U+1F525$, số kim cương/tích lũy $\U+1F48E$, hoặc năng lượng/trạng thái tài khoản FULL).Nút truy cập nhanh vào trang cá nhân (Avatar profile) hoặc Cài đặt.2. Phân tầng rõ ràng giữa Navbar và Page Title (Tiêu đề trang)Tránh việc gộp chung logo thương hiệu với tiêu đề trang vào cùng một hàng gây rối mắt và lệch cấu trúc. Hãy tách thành 2 tầng:Tầng 1 (Navbar Cố Định): Luôn giữ nguyên trạng thái ở mọi màn hình (Logo bên trái, Bộ chỉ số chung + Avatar bên phải).Tầng 2 (Page Header - Nằm dưới Navbar): Tiêu đề riêng biệt cho từng trang (Ví dụ: "Khám Phá Không Gian", "Tất Cả Bản Phối", "Thống Kê Lượt Nghe"). Tầng này có thể đi kèm mô tả ngắn (subtitle) hoặc các nút hành động riêng của trang đó (như nút Cập nhật ở trang Thống kê).   3. Gợi ý cấu trúc Code mẫu (HTML/CSS hoặc Flutter/React)Dưới đây là mô hình cấu trúc giao diện chuẩn để bạn dễ dàng áp dụng vào mã nguồn của mình:HTML<!-- 1. GLOBAL NAVBAR (Cố định ở trên cùng, đồng bộ 100% các trang) -->
+<header class="global-navbar">
+  <div class="navbar-left">
+    <img src="owl-logo.png" alt="Logo" class="brand-logo" />
+    <span class="brand-name">Nocturn Sleep</span>
+    <span class="badge-sleep">SLEEP</span>
+  </div>
+  
+  <div class="navbar-right">
+    <div class="stat-item"><span class="icon">🔥</span> 7</div>
+    <div class="stat-item"><span class="icon">💎</span> 240</div>
+    <div class="stat-badge full">FULL</div>
+    <img src="user-avatar.png" alt="Profile" class="user-avatar" />
+  </div>
+</header>
+
+<!-- 2. PAGE CONTAINER (Nội dung thay đổi linh hoạt theo từng màn hình) -->
+<main class="page-container">
+  <!-- Page Header riêng cho từng trang -->
+  <div class="page-header">
+    <h1 class="page-title">Khám Phá Không Gian</h1>
+    <p class="page-subtitle">Chọn âm thanh yêu thích để bắt đầu thư giãn</p>
+  </div>
+
+  <!-- Nội dung chi tiết của trang -->
+  <div class="page-content">
+    <!-- Các card âm thanh, danh sách, bộ lọc... -->
+  </div>
+</main>
+4. Tóm tắt các điểm cần "chuẩn hóa" ngay trên ứng dụng của bạn:Đưa bộ chỉ số (🔥, 💎, trạng thái) từ màn hình Profile (hình 4) lên thẳng Navbar chung ở góc phải cho tất cả các màn hình, giúp người dùng luôn theo dõi được tiến trình của mình mọi lúc.   Cố định Logo bên trái với một kích thước và font chữ duy nhất.Quy chuẩn hóa Page Title nằm ở phần đầu của vùng cuộn nội dung với cùng một kích thước chữ (Heading 1) và khoảng cách lề (padding/margin) đồng nhất.

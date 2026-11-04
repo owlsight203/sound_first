@@ -28,7 +28,7 @@ class PromoBanner extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.4),
+                color: Colors.black.withValues(alpha: 0.4),
                 blurRadius: 16,
                 offset: const Offset(0, 6),
               ),
@@ -61,8 +61,8 @@ class PromoBanner extends StatelessWidget {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Colors.black.withOpacity(0.85),
-                        Colors.black.withOpacity(0.45),
+                        Colors.black.withValues(alpha: 0.85),
+                        Colors.black.withValues(alpha: 0.45),
                       ],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
@@ -87,7 +87,7 @@ class PromoBanner extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF00C853).withOpacity(0.85),
+                              color: const Color(0xFF00C853).withValues(alpha: 0.85),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
@@ -114,7 +114,7 @@ class PromoBanner extends StatelessWidget {
                           Text(
                             description,
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.85),
+                              color: Colors.white.withValues(alpha: 0.85),
                               fontSize: 12,
                               height: 1.3,
                             ),

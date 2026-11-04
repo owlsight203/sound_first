@@ -1,6 +1,6 @@
 # 📋 PROGRESS.md — Nocturn Sleep (sound_first)
 
-> Cập nhật lần cuối: 2026-11-03  
+> Cập nhật lần cuối: 2026-11-04  
 > Branch chính: `main` | Remote: `git@github.com:owlsight203/sound_first.git`
 
 ---
@@ -22,8 +22,12 @@
 
 ```
 lib/
-├── main.dart                        # Entry point, SimpleAudioScreen (Trang Chủ) + Avatar mở Profile ở góc phải
+├── main.dart                        # Entry point, SimpleAudioScreen (Trang Chủ) với GlobalNavbar & PageHeader
 ├── navigation_helper.dart           # Điều phối chuyển tab toàn cục (4 tab)
+│
+├── navbar/                          # ✅ MỚI — Thanh điều hướng chung & Tiêu đề chuẩn hóa (yeucau_navbar.txt)
+│   ├── global_navbar.dart           # GlobalNavbar (Tầng 1): Logo cú 🦉 + Tên app + SLEEP + 🔥 7 + 💎 240 + ⚡ FULL + Avatar
+│   └── page_header.dart             # PageHeader (Tầng 2): Tiêu đề chuẩn hóa đồng nhất trên mọi màn hình
 │
 ├── main_page/
 │   ├── top/
@@ -43,13 +47,13 @@ lib/
 │   └── bottom_navigation_menu_controller.dart  # StateProvider<int> currentBottomTabProvider
 │
 ├── library/
-│   └── library_page.dart            # Tab "Chủ Đề" — toàn bộ danh sách + lọc danh mục
+│   └── library_page.dart            # Tab "Chủ Đề" — Toàn bộ danh sách + GlobalNavbar + PageHeader (Search action)
 │
 ├── stats/
-│   └── stats_screen.dart            # Tab "Thống Kê" — Màn hình Thống Kê Lượt Nghe
+│   └── stats_screen.dart            # Tab "Thống Kê" — Màn hình Thống Kê Lượt Nghe + GlobalNavbar + PageHeader (CẬP NHẬT)
 │
-├── profile/                         # ✅ MỚI — Màn hình Cá Nhân & Cài Đặt (avt_setting_req.txt)
-│   ├── profile_screen.dart          # Màn hình chính Tab 4 (kết nối mini player, PRO link)
+├── profile/                         # Màn hình Cá Nhân & Cài Đặt
+│   ├── profile_screen.dart          # Màn hình chính Tab 4 + GlobalNavbar + PageHeader ("Hồ Sơ Cá Nhân")
 │   └── widgets/
 │       ├── profile_top_bar.dart     # Top bar: Logo Nocturne + Streak + Gems + FULL
 │       ├── profile_header.dart      # Avatar tròn + Tên người dùng + ID + Danh hiệu
@@ -148,6 +152,23 @@ lib/
 - Thêm nút đóng (X) dạng hình tròn nổi bật ở góc trên bên phải của `ProHeader`
 - Xử lý đóng an toàn: `Navigator.pop(context)` nếu mở dạng sub-page, hoặc điều hướng về Trang Chủ qua `handleTabNavigation` nếu là màn hình gốc
 
+### ✅ Chuẩn hoá Global Navbar & Page Title (yeucau_navbar.txt)
+- **Tầng 1 (GlobalNavbar - Cố định ở trên cùng, đồng bộ 100% các màn hình)**:
+  - **Trái (Brand/Logo):** Icon chú cú 🦉 + `Nocturn Sleep` + huy hiệu `SLEEP` (bấm để về Trang chủ).
+  - **Giữa:** Khoảng thoáng whitespace cân đối.
+  - **Phải (User Actions & Status):** Streak 🔥 `7` (chạm mở Thống kê), Gems 💎 `240` (chạm mở Cá nhân), trạng thái `⚡ FULL` (chạm mở Pro), cùng Avatar tròn 🦉 (chạm mở Cá nhân / Cài đặt).
+- **Tầng 2 (PageHeader - Tiêu đề trang nằm dưới Navbar)**:
+  - Chuẩn hoá Heading 1 (`fontSize: 22`, `FontWeight.bold`, màu trắng), Subtitle (`fontSize: 13`, xám) và padding/margin đồng nhất trên mọi màn hình.
+  - Trang chủ: `"Khám Phá Không Gian"` — `"Chọn âm thanh yêu thích để bắt đầu thư giãn"`
+  - Chủ đề: `"Tất Cả Bản Phối"` — `"Khám phá toàn bộ danh sách âm thanh thư giãn của bạn"` + nút Tìm kiếm
+  - Thống kê: `"Thống Kê Lượt Nghe"` — `"Nhật ký giải phóng tâm trí và chu kỳ ngủ"` + nút `"CẬP NHẬT"`
+  - Cá nhân: `"Hồ Sơ Cá Nhân"` — `"Quản lý thông tin tài khoản và thiết lập thói quen ngủ"`
+- **Đồng bộ toàn diện:**
+  - Áp dụng trên cả 4 màn hình chính (`main.dart`, `library_page.dart`, `stats_screen.dart`, `profile_screen.dart`).
+  - Tích hợp `PlayFooter` (mini player nổi) trên cả màn hình Thống kê.
+  - Fix triệt để 11 cảnh báo `withOpacity` sang `.withValues(alpha:)` → `flutter analyze` 0 issues.
+  - Bổ sung bộ test widget toàn diện (`test/navbar_test.dart`) kiểm tra cả 4 màn hình → test pass 100%.
+
 ---
 
 ## 📊 Màn hình Thống Kê (`stats_screen.dart`) — Chi tiết
@@ -196,7 +217,7 @@ Gồm 7 section theo thiết kế trong `yeucau_giaodien.txt`:
 - [ ] **Accessibility** — vùng chạm tối thiểu 44×44pt (iOS) / 48×48dp (Android), WCAG AA contrast
 
 ### Minor / Info
-- [ ] Fix 11 `info` `withOpacity` deprecated còn sót ở các file cũ (`banner_menu.dart`, `stat_card.dart`, …) → thay bằng `.withValues(alpha:)`
+- [x] Fix 11 `info` `withOpacity` deprecated còn sót ở các file cũ (`banner_menu.dart`, `stat_card.dart`, …) → thay bằng `.withValues(alpha:)` (đã hoàn thành, `flutter analyze` 0 issues)
 
 ---
 

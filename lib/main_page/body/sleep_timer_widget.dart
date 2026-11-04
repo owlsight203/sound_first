@@ -74,7 +74,7 @@ class _SleepTimerWidgetState extends State<SleepTimerWidget> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -110,7 +110,7 @@ class _SleepTimerWidgetState extends State<SleepTimerWidget> {
                   child: CircularProgressIndicator(
                     value: progress,
                     strokeWidth: 8,
-                    backgroundColor: Colors.white.withOpacity(0.05),
+                    backgroundColor: Colors.white.withValues(alpha: 0.05),
                     valueColor:
                         const AlwaysStoppedAnimation<Color>(Color(0xFF00C853)),
                   ),
@@ -122,7 +122,7 @@ class _SleepTimerWidgetState extends State<SleepTimerWidget> {
                     Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF00C853).withOpacity(0.15),
+                        color: const Color(0xFF00C853).withValues(alpha: 0.15),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -162,7 +162,7 @@ class _SleepTimerWidgetState extends State<SleepTimerWidget> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
@@ -218,7 +218,7 @@ class _SleepTimerWidgetState extends State<SleepTimerWidget> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 5, vertical: 2),
                               decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.25),
+                                color: Colors.black.withValues(alpha: 0.25),
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: const Text(

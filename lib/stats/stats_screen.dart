@@ -1,97 +1,112 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../footer/bottom_navigation_menu.dart';
+import '../footer/play_footer.dart';
+import '../main_page/body/audio_provider.dart';
+import '../navbar/global_navbar.dart';
+import '../navbar/page_header.dart';
 
-class StatsScreen extends StatefulWidget {
+class StatsScreen extends ConsumerStatefulWidget {
   const StatsScreen({super.key});
 
   @override
-  State<StatsScreen> createState() => _StatsScreenState();
+  ConsumerState<StatsScreen> createState() => _StatsScreenState();
 }
 
-class _StatsScreenState extends State<StatsScreen> {
+class _StatsScreenState extends ConsumerState<StatsScreen> {
   // 0 = Tuần Này, 1 = Tháng Này, 2 = Mọi Lúc
   int selectedTab = 0;
 
   @override
   Widget build(BuildContext context) {
+    final currentAudio = ref.watch(currentPlayingAudioProvider);
+    final isPlaying = ref.watch(isPlayingProvider);
+    final audioController = ref.watch(audioControllerProvider);
+
     return Scaffold(
       backgroundColor: const Color(0xFF0F141C),
+      appBar: const GlobalNavbar(),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(),
-              const SizedBox(height: 16),
-              _buildTimeTabs(),
-              const SizedBox(height: 16),
-              _buildStatsGrid(),
-              const SizedBox(height: 16),
-              _buildWeeklyDurationBanner(),
-              const SizedBox(height: 16),
-              _buildWeeklyChartSection(),
-              const SizedBox(height: 16),
-              _buildTopSoundsSection(),
-              const SizedBox(height: 16),
-              _buildAiAdviceCard(),
-              const SizedBox(height: 16),
-            ],
-          ),
+        bottom: false,
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 165),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  PageHeader(
+                    title: 'Thống Kê Lượt Nghe',
+                    subtitle: 'Nhật ký giải phóng tâm trí và chu kỳ ngủ',
+                    action: _buildUpdateButton(),
+                  ),
+                  const SizedBox(height: 16),
+                  _buildTimeTabs(),
+                  const SizedBox(height: 16),
+                  _buildStatsGrid(),
+                  const SizedBox(height: 16),
+                  _buildWeeklyDurationBanner(),
+                  const SizedBox(height: 16),
+                  _buildWeeklyChartSection(),
+                  const SizedBox(height: 16),
+                  _buildTopSoundsSection(),
+                  const SizedBox(height: 16),
+                  _buildAiAdviceCard(),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+            if (currentAudio != null)
+              Positioned(
+                left: 16,
+                right: 16,
+                bottom: 30,
+                child: PlayFooter(
+                  title: currentAudio.title,
+                  subtitle: currentAudio.subtitle,
+                  imagePath: currentAudio.image,
+                  isPlaying: isPlaying,
+                  onPlayPauseToggle: () {
+                    if (isPlaying) {
+                      audioController.pauseAudio();
+                    } else {
+                      audioController.continueAudio();
+                    }
+                  },
+                ),
+              ),
+          ],
         ),
       ),
       bottomNavigationBar: const BottomNavigationMenu(),
     );
   }
 
-  // ─── HEADER ────────────────────────────────────────────────────────────────
+  // ─── ACTION BUTTON ─────────────────────────────────────────────────────────
 
-  Widget _buildHeader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Thống Kê Lượt Nghe',
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-            ),
-            SizedBox(height: 4),
-            Text(
-              'Nhật ký giải phóng tâm trí và chu kỳ ngủ',
-              style: TextStyle(fontSize: 12, color: Colors.white60),
-            ),
-          ],
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-          decoration: BoxDecoration(
-            color: const Color(0xFF1B382B),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-                color: const Color(0xFF2EE6A6).withValues(alpha: 0.3)),
+  Widget _buildUpdateButton() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1B382B),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+            color: const Color(0xFF2EE6A6).withValues(alpha: 0.3)),
+      ),
+      child: const Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _GreenDot(),
+          SizedBox(width: 6),
+          Text(
+            'CẬP NHẬT',
+            style: TextStyle(
+                color: Color(0xFF2EE6A6),
+                fontSize: 11,
+                fontWeight: FontWeight.bold),
           ),
-          child: const Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _GreenDot(),
-              SizedBox(width: 6),
-              Text(
-                'CẬP NHẬT',
-                style: TextStyle(
-                    color: Color(0xFF2EE6A6),
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

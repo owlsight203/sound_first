@@ -1,30 +1,33 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:sound_first/main.dart';
+import 'package:sound_first/navbar/global_navbar.dart';
+import 'package:sound_first/navbar/page_header.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('App renders GlobalNavbar and PageHeader properly',
+      (WidgetTester tester) async {
+    // Build app within Riverpod ProviderScope
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MyApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // 1. Verify GlobalNavbar presence
+    expect(find.byType(GlobalNavbar), findsOneWidget);
+    expect(find.text('Nocturn Sleep'), findsOneWidget);
+    expect(find.text('SLEEP'), findsOneWidget);
+    expect(find.text('7'), findsOneWidget);
+    expect(find.text('240'), findsOneWidget);
+    expect(find.text('FULL'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // 2. Verify PageHeader on Home page
+    expect(find.byType(PageHeader), findsOneWidget);
+    expect(find.text('Khám Phá Không Gian'), findsOneWidget);
+    expect(find.text('Chọn âm thanh yêu thích để bắt đầu thư giãn'),
+        findsOneWidget);
   });
 }

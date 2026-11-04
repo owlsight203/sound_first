@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Các thành phần giao diện khác
+import 'navbar/global_navbar.dart';
+import 'navbar/page_header.dart';
 import 'main_page/top/banner_menu.dart';
 import 'main_page/top/menu_category.dart';
 import 'footer/play_footer.dart';
@@ -69,45 +71,7 @@ class _SimpleAudioScreenState extends ConsumerState<SimpleAudioScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xFF121216),
-      appBar: AppBar(
-        title: const Text(
-          'Nocturn Sleep',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: const Color(0xFF1E1E2C),
-        elevation: 0,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 14),
-            child: Center(
-              child: GestureDetector(
-                onTap: () {
-                  handleTabNavigation(context, ref, 3);
-                },
-                child: Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: const Color(0xFF161E2C),
-                    border: Border.all(
-                      color: const Color(0xFF00C853),
-                      width: 1.5,
-                    ),
-                  ),
-                  child: const Center(
-                    child: Text('🦉', style: TextStyle(fontSize: 18)),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+      appBar: const GlobalNavbar(),
       body: SafeArea(
         bottom: false,
         child: Stack(
@@ -117,23 +81,10 @@ class _SimpleAudioScreenState extends ConsumerState<SimpleAudioScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Khám Phá Không Gian',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  const PageHeader(
+                    title: 'Khám Phá Không Gian',
+                    subtitle: 'Chọn âm thanh yêu thích để bắt đầu thư giãn',
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Chọn âm thanh yêu thích để bắt đầu thư giãn',
-                    style: TextStyle(
-                      color: Colors.grey.shade400,
-                      fontSize: 13,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
                   PromoBanner(
                     badgeText: 'ĐẶC BIỆT HÔM NAY',
                     title: 'Gói Thư Giãn Đỉnh Cao',
